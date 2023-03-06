@@ -7,7 +7,9 @@ services:
             dockerfile: Dockerfile
             context: .
         container_name: webcrawler
+        restart: always
         depends_on:
+            - cassandra
             - cache
         ports:
             - "8080:8080"
@@ -20,6 +22,12 @@ services:
         environment:
             - ALLOW_EMPTY_PASSWORD=yes
             - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        networks:
+            - webnet
+    cassandra:
+        image: 'cassandra'
+        ports:
+            - "9042:9042"
         networks:
             - webnet
 networks:

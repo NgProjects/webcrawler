@@ -2,6 +2,7 @@ package com.webcrawler.urlextractor.impl;
 
 import com.webcrawler.constants.WebCrawlerConstants;
 import com.webcrawler.urlextractor.interfaces.IUrlExtractor;
+import com.webcrawler.urlextractor.qualifiers.AUrlExtractor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,17 +18,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@AUrlExtractor
 public class UrlExtractor implements IUrlExtractor {
 
     Logger logger = LoggerFactory.getLogger(UrlExtractor.class);
     @Override
     public Set<String> extractUrl(String rootUrl) {
-
+        // check if url can be crawled
+        if(!urlCanBeCrawled(rootUrl)){
+            return null;
+        }
         Set<String> extractedUrls = new HashSet<>();
 
         String rootUrlDomain = getUrlDomain(rootUrl);
 
-        Elements links = extracttLinkElements(rootUrl);
+        Elements links = extractLinkElements(rootUrl);
         if(links == null){
             return extractedUrls;
         }
@@ -44,10 +49,19 @@ public class UrlExtractor implements IUrlExtractor {
 
     /**
      *
+     * @param rootUrl
+     * @return
+     */
+    private boolean urlCanBeCrawled(String rootUrl) {
+        return rootUrl != null; //replace with checking for url robot.txt
+    }
+
+    /**
+     *
      * @param link
      * @return
      */
-    private static String getLinkUrl(Element link) {
+    public String getLinkUrl(Element link) {
         String linkHref = link.attr(WebCrawlerConstants.HREF_TAG);
         String linkUrl;
         if(linkHref.startsWith("/")){
@@ -63,7 +77,7 @@ public class UrlExtractor implements IUrlExtractor {
      * @param url
      * @return
      */
-    private Elements extracttLinkElements(String url) {
+    public Elements extractLinkElements(String url) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).timeout(10 * 1000).userAgent
