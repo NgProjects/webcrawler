@@ -1,4 +1,4 @@
-package com.webcrawler.service.interfaces;
+package com.webcrawler.service;
 
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public interface ICrawlerService {
 
     Set<String> getCachedChildUrls(String url);
 
-    int getCrawlLimit();
+    int getMaxNoOfRequestsToDomain();
     Set<String> extractUrl(String url);
 
 }

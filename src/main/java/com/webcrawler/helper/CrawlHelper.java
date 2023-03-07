@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class CrawlerHelper {
-    static Logger logger = LoggerFactory.getLogger(CrawlerHelper.class);
+public class CrawlHelper {
+    static Logger logger = LoggerFactory.getLogger(CrawlHelper.class);
 
     /**
      *

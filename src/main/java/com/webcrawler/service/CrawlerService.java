@@ -1,17 +1,15 @@
-package com.webcrawler.service.impl;
+package com.webcrawler.service;
 
-import com.webcrawler.cache.impl.ACache;
-import com.webcrawler.cache.interfaces.ICache;
-import com.webcrawler.config.impl.ACrawlerAppConfig;
-import com.webcrawler.config.interfaces.IAppConfig;
+import com.webcrawler.cache.ARedisCache;
+import com.webcrawler.cache.ICache;
+import com.webcrawler.config.AnAppConfig;
+import com.webcrawler.config.IAppConfig;
 import com.webcrawler.constants.WebCrawlerConstants;
 import com.webcrawler.entities.CrawledUrl;
 import com.webcrawler.enums.ConfigKey;
 import com.webcrawler.repository.CrawledUrlRepository;
-import com.webcrawler.service.interfaces.ICrawlerService;
-import com.webcrawler.urlextractor.interfaces.IUrlExtractor;
-import com.webcrawler.urlextractor.qualifiers.AUrlExtractor;
-import lombok.NoArgsConstructor;
+import com.webcrawler.urlextractor.AUrlExtractor;
+import com.webcrawler.urlextractor.IUrlExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +18,6 @@ import java.util.Set;
 @Service
 @ACrawlerService
 public class CrawlerService implements ICrawlerService {
-
     private final ICache cache;
     private final IUrlExtractor urlExtractor;
 
@@ -29,10 +26,10 @@ public class CrawlerService implements ICrawlerService {
     private final IAppConfig appConfig;
 
     @Autowired
-    public CrawlerService(@ACache ICache cache,
+    public CrawlerService(@ARedisCache ICache cache,
                           @AUrlExtractor IUrlExtractor urlExtractor,
-                          CrawledUrlRepository crawledUrlRepository,
-                          @ACrawlerAppConfig IAppConfig appConfig) {
+                          @AnAppConfig IAppConfig appConfig,
+                          CrawledUrlRepository crawledUrlRepository) {
         this.cache = cache;
         this.urlExtractor = urlExtractor;
         this.crawledUrlRepository = crawledUrlRepository;
@@ -47,12 +44,17 @@ public class CrawlerService implements ICrawlerService {
         crawledUrl.setUrl(url);
         crawledUrl.setExtractedUrls(crawledUrls);
 
-        crawledUrlRepository.save(crawledUrl);
+        this.crawledUrlRepository.save(crawledUrl);
     }
 
     @Override
     public Set<String> retrieveCrawledUrlFromDb(String url) {
-        return crawledUrlRepository.findExtractedUrlsByUrl(url);
+
+        CrawledUrl crawledUrl = crawledUrlRepository.findCrawledUrlByUrl(url);
+        if(crawledUrl == null){
+            return null;
+        }
+        return crawledUrl.getExtractedUrls();
     }
 
     @Override
@@ -76,16 +78,16 @@ public class CrawlerService implements ICrawlerService {
     }
 
     @Override
-    public int getCrawlLimit() {
+    public int getMaxNoOfRequestsToDomain() {
 
-        Integer crawlLimit = cache.getItem(ConfigKey.CRAWL_LIMIT.getCacheKey());
-        if(crawlLimit != null && crawlLimit > 0){
-            return crawlLimit;
+        Integer maxRequest = cache.getItem(ConfigKey.MAX_REQUEST_TO_WEBSITE.getCacheKey());
+        if(maxRequest != null && maxRequest > 0){
+            return maxRequest;
         }
 
-        crawlLimit = appConfig.getConfigInt(ConfigKey.CRAWL_LIMIT);
-        cache.setItem(ConfigKey.CRAWL_LIMIT.getCacheKey(), crawlLimit);
-        return crawlLimit;
+        maxRequest = appConfig.getConfigInt(ConfigKey.MAX_REQUEST_TO_WEBSITE);
+        cache.setItem(ConfigKey.MAX_REQUEST_TO_WEBSITE.getCacheKey(), maxRequest);
+        return maxRequest;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.webcrawler.exception;
 
+import java.io.Serial;
+
 public class WebCrawlerException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3386079739292109462L;
+	@Serial
+	private static final long serialVersionUID = 2867213076468308426L;
 
 	public WebCrawlerException() {
 		super();
