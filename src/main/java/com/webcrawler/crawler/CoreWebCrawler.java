@@ -1,31 +1,31 @@
-package com.webcrawler.crawler.impl;
+package com.webcrawler.crawler;
 
-import com.webcrawler.crawler.interfaces.ICrawler;
-import com.webcrawler.crawler.pojos.CrawlerComponents;
 import com.webcrawler.exception.WebCrawlerRuntimeException;
-import com.webcrawler.service.interfaces.ICrawlerService;
+import com.webcrawler.helper.CrawlHelper;
+import com.webcrawler.service.ICrawlerService;
 
 import java.util.Set;
 
-public class Crawler implements ICrawler {
+public class CoreWebCrawler implements IWebCrawler {
 
     private final ICrawlerService crawlerService;
-    private final CrawlerComponents crawlerComponents;
+
+    private final WebCrawlerComponents webCrawlerComponents;
 
     private final String rootUrl;
 
-    public Crawler(String rootUrl, ICrawlerService crawlerService) {
+    public CoreWebCrawler(String rootUrl, ICrawlerService crawlerService) {
         checkThatRootUrlIsNotNull(rootUrl);
         this.rootUrl = rootUrl;
         this.crawlerService = crawlerService;
-        this.crawlerComponents = new CrawlerComponents();
+        this.webCrawlerComponents = new WebCrawlerComponents();
     }
 
     /**
      *
-     * @param rootUrl
+     * @param rootUrl rootUrl
      */
-    private static void checkThatRootUrlIsNotNull(String rootUrl) {
+    private void checkThatRootUrlIsNotNull(String rootUrl) {
         if(rootUrl == null || rootUrl.isEmpty()){
             throw new WebCrawlerRuntimeException("Root url cannot be null");
         }
@@ -46,33 +46,32 @@ public class Crawler implements ICrawler {
             return crawledUrls;
         }
 
-        crawledUrls = handleCrawl();
+        crawledUrls = crawlUrlFromWebsite();
 
-        crawlerService.cacheCrawledUrls(rootUrl, crawledUrls);
-        crawlerService.saveCrawledUrlInDB(rootUrl, crawledUrls);
+        //save and cache if not null and empty
+        if(crawledUrls != null && !crawledUrls.isEmpty()){
+            crawlerService.cacheCrawledUrls(rootUrl, crawledUrls);
+            crawlerService.saveCrawledUrlInDB(rootUrl, crawledUrls);
+        }
 
         return crawledUrls;
     }
 
     /**
      *
-     * @return
+     * @return set of crawled urls
      */
-    private Set<String> handleCrawl() {
+    private Set<String> crawlUrlFromWebsite() {
 
-        int limitCounter = crawlerService.getCrawlLimit();
-        int crawlCounter = 0;
+        int maxNoOfRequestToRootUrl = crawlerService.getMaxNoOfRequestsToDomain();
+        int noOfRequestsCompleted = 0;
 
-        crawlerComponents.getUrlFrontier().add(rootUrl);
-        crawlerComponents.getVisitedUrls().add(rootUrl);
+        webCrawlerComponents.getUrlFrontier().add(rootUrl);
+        webCrawlerComponents.getVisitedUrls().add(rootUrl);
 
-        while (!crawlerComponents.getUrlFrontier().isEmpty()){
+        while (!webCrawlerComponents.getUrlFrontier().isEmpty() && noOfRequestsCompleted <= maxNoOfRequestToRootUrl){
 
-            if(crawlCounter == limitCounter){
-                break;
-            }
-
-            String currentUrl = crawlerComponents.getUrlFrontier().remove();
+            String currentUrl = CrawlHelper.removeLastSlashIfAny(webCrawlerComponents.getUrlFrontier().remove());
             Set<String> extractedUrl = crawlerService.getCachedChildUrls(currentUrl);
             if(extractedUrl == null || extractedUrl.isEmpty()){
                 extractedUrl = crawlerService.extractUrl(currentUrl);
@@ -80,20 +79,19 @@ public class Crawler implements ICrawler {
 
             if(extractedUrl != null){
 
-                //cache pending retrieved urls incase another url comes with a similar request
+                //cache pending retrieved urls in case another url comes with a similar request
                 crawlerService.cacheChildUrls(currentUrl, extractedUrl);
-                crawlerComponents.getCrawledUrl().addAll(extractedUrl);
+                webCrawlerComponents.getCrawledUrl().addAll(extractedUrl);
 
                 Set<String> unvisitedUrls = removeVisitedUrls(extractedUrl);
+                webCrawlerComponents.getUrlFrontier().addAll(unvisitedUrls);
 
-                crawlerComponents.getUrlFrontier().addAll(unvisitedUrls);
-
-                crawlCounter++;
+                noOfRequestsCompleted++;
             }
 
         }
 
-        return crawlerComponents.getCrawledUrl();
+        return webCrawlerComponents.getCrawledUrl();
     }
 
     /**
@@ -101,7 +99,8 @@ public class Crawler implements ICrawler {
      * @return extractedUrl after removing visited url
      */
     private Set<String> removeVisitedUrls(Set<String> extractedUrl) {
-        extractedUrl.removeAll(crawlerComponents.getVisitedUrls());
+        extractedUrl.removeAll(webCrawlerComponents.getVisitedUrls());
         return extractedUrl;
     }
+
 }
