@@ -1,7 +1,8 @@
 package com.webcrawler.controller;
 
 import com.webcrawler.controller.response.CrawlerResponse;
-import com.webcrawler.crawler.Crawler;
+import com.webcrawler.crawler.CoreWebCrawler;
+import com.webcrawler.crawler.IWebCrawler;
 import com.webcrawler.service.ICrawlerService;
 import com.webcrawler.service.ACrawlerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class ControllerService {
      * @return - Crawler response containing the crawled url
      */
     public CrawlerResponse crawlUrl(String url) {
-        Crawler crawler = new Crawler(url, crawlerService);
-        Set<String> extractedUrl = crawler.crawlUrl();
+        IWebCrawler webCrawler = new CoreWebCrawler(url, crawlerService);
+        Set<String> extractedUrl = webCrawler.crawlUrl();
         return new CrawlerResponse(extractedUrl);
     }
 }
