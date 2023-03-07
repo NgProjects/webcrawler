@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ConfigKey {
 
-    CRAWL_LIMIT("crawl.limit", "crawl_limit" ,"50");
+    MAX_REQUEST_TO_WEBSITE("webcrawler-max-request", "webcrawler_max_request" ,"50");
     private final String key;
 
     private final String cacheKey;
