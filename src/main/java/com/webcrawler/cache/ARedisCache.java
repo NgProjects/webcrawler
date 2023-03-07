@@ -1,4 +1,4 @@
-package com.webcrawler.cache.impl;
+package com.webcrawler.cache;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -16,5 +16,5 @@ import static java.lang.annotation.ElementType.TYPE;
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE, FIELD, METHOD, PARAMETER })
-public @interface ACache {
+public @interface ARedisCache {
 }
