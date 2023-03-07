@@ -1,25 +1,28 @@
 package com.webcrawler.controller;
 
-import com.webcrawler.controller.request.CrawlerRequest;
 import com.webcrawler.controller.response.CrawlerResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController()
 @RequestMapping(path = "webcrawler")
-public class CrawlerController {
+public class CrawlRestController {
+
+    private final ControllerService controllerService;
 
     @Autowired
-    private final ControllerService controllerService;
-    public CrawlerController(ControllerService controllerService) {
+    public CrawlRestController(ControllerService controllerService) {
         this.controllerService = controllerService;
     }
 
-    @GetMapping
-    public CrawlerResponse crawlUrl(CrawlerRequest crawlerRequest) {
-        return controllerService.crawlUrl(crawlerRequest);
+    @GetMapping("single")
+    @Tag(name = "single", description = "Crawl Single Url")//for swagger documentation
+    public CrawlerResponse crawlSingleUrl(@RequestParam String url) {
+        return controllerService.crawlUrl(url);
     }
 
 }
