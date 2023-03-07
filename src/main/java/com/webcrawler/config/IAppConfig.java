@@ -1,4 +1,4 @@
-package com.webcrawler.config.interfaces;
+package com.webcrawler.config;
 
 import com.webcrawler.enums.ConfigKey;
 

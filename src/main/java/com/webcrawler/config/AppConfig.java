@@ -1,17 +1,16 @@
-package com.webcrawler.config.impl;
+package com.webcrawler.config;
 
-import com.webcrawler.config.interfaces.IAppConfig;
 import com.webcrawler.enums.ConfigKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
-@ACrawlerAppConfig
+@AnAppConfig
 public class AppConfig implements IAppConfig {
 
     @Autowired
-    Environment env;
+    private Environment env;
     @Override
     public Integer getConfigInt(ConfigKey key) {
         String value = getConfig(key);

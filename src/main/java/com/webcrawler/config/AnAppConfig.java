@@ -1,4 +1,4 @@
-package com.webcrawler.config.impl;
+package com.webcrawler.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -16,6 +16,6 @@ import static java.lang.annotation.ElementType.TYPE;
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ TYPE, FIELD, METHOD, PARAMETER })
-public @interface ACrawlerAppConfig {
+public @interface AnAppConfig {
 
 }
