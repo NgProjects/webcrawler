@@ -4,7 +4,7 @@ services:
     webcrawler:
         image: 'webcrawler:latest'
         build:
-            dockerfile: Dockerfile
+            dockerfile: docker/webcrawler/Dockerfile
             context: .
         container_name: webcrawler
         restart: always
@@ -17,6 +17,7 @@ services:
             - webnet
     cache:
         image: 'redis'
+        hostname: cache
         ports:
             - "6379:6379"
         environment:
@@ -25,9 +26,16 @@ services:
         networks:
             - webnet
     cassandra:
-        image: 'cassandra'
+        build:
+            dockerfile: docker/cassandra/Dockerfile
+            context: .
+        expose:
+            - 9042
         ports:
             - "9042:9042"
+        environment:
+            CASSANDRA_DC: datacenter1
+            CASSANDRA_LISTEN_ADDRESS: cassandra
         networks:
             - webnet
 networks:
