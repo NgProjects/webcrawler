@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * This is a proxy class so that we can catch redis connection errors,
+ * This is a proxy class so that we can neatly catch redis connection errors
  * also, Never Call Cacheable Method from the same class
  */
 @Service
@@ -38,13 +38,22 @@ public class RedisCacheProxy implements ICache {
 
     @Override
     public <T> T getItem(String cacheKey) {
-        return redisCore.getItemFromCache(cacheKey);
+        try {
+            return redisCore.getItemFromCache(cacheKey);
+        } catch (RedisConnectionFailureException e) {
+            logger.error("Cannot connect to redis cache at the moment", e);
+        }
+        return null;
     }
 
     @Override
     @CacheEvict(key = "#cacheKey")
     public void removeItem(String cacheKey) {
-        redisCore.removeItem(cacheKey);
+        try {
+            redisCore.removeItem(cacheKey);
+        } catch (RedisConnectionFailureException e) {
+            logger.error("Cannot connect to redis cache at the moment", e);
+        }
     }
 
 }
