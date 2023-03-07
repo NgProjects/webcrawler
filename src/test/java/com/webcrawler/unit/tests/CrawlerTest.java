@@ -2,7 +2,9 @@ package com.webcrawler.unit.tests;
 
 import com.webcrawler.crawler.impl.Crawler;
 import com.webcrawler.exception.WebCrawlerRuntimeException;
+import com.webcrawler.helper.CrawlerHelper;
 import com.webcrawler.service.impl.CrawlerService;
+import com.webcrawler.unit.mocks.MockUrlSource;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,9 +15,6 @@ import org.mockito.Mockito;
 import java.util.Set;
 
 public class CrawlerTest {
-
-    //mock database and cache
-
 
     private CrawlerService crawlerService;
 
@@ -46,6 +45,12 @@ public class CrawlerTest {
     }
 
     @Test
+    public void testRemoveLastSlashInUrl(){
+        String result = CrawlerHelper.removeLastSlashIfAny("https://monzo.com/");
+        Assertions.assertEquals("https://monzo.com", result);
+    }
+
+    @Test
     public void testThatCrawlerTriesToRetrieveFromTheDbAfterCache(){
         Set<String> resultFromDB = MockUrlSource.mockUrlSource();
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
@@ -62,12 +67,14 @@ public class CrawlerTest {
     public void testThatCrawlerFetchesUrl(){
 
         Set<String> mockExtractedUrls = MockUrlSource.mockUrlSource();
+        int crawlLimitConfig = 3;
 
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromDb(Mockito.anyString());
         Mockito.doReturn(null).when(crawlerService).getCachedChildUrls(Mockito.anyString());
         Mockito.doReturn(mockExtractedUrls).when(crawlerService).extractUrl(Mockito.anyString());
-        Mockito.doReturn(3).when(crawlerService).getCrawlLimit();
+
+        Mockito.doReturn(crawlLimitConfig).when(crawlerService).getCrawlLimit();
 
         Mockito.doNothing().when(crawlerService).cacheChildUrls(Mockito.anyString(), Mockito.anySet());
 
@@ -88,9 +95,10 @@ public class CrawlerTest {
         inOrder.verify(crawlerService).cacheCrawledUrls(Mockito.anyString(), Mockito.anySet());
         inOrder.verify(crawlerService).saveCrawledUrlInDB(Mockito.anyString(), Mockito.anySet());
 
-        //Extract URL should be called for the root URL and for every other content of the mocked urls
+        //Extract URL should be called for the mocked crawl limit value which is 3
         // visited url check should prevent the mocked urls to be crawled more than once
-        Mockito.verify(crawlerService, Mockito.atMost(mockExtractedUrls.size() + 1)).extractUrl(Mockito.anyString());
+        Mockito.verify(crawlerService, Mockito.atMost(crawlLimitConfig)).extractUrl(Mockito.anyString());
+
 
     }
 
