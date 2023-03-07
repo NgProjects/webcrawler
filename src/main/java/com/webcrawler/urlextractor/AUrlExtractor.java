@@ -1,4 +1,4 @@
-package com.webcrawler.urlextractor.qualifiers;
+package com.webcrawler.urlextractor;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 

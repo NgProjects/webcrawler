@@ -1,8 +1,7 @@
-package com.webcrawler.urlextractor.impl;
+package com.webcrawler.urlextractor;
 
 import com.webcrawler.constants.WebCrawlerConstants;
-import com.webcrawler.urlextractor.interfaces.IUrlExtractor;
-import com.webcrawler.urlextractor.qualifiers.AUrlExtractor;
+import com.webcrawler.helper.CrawlHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,7 +27,7 @@ public class UrlExtractor implements IUrlExtractor {
         }
         Set<String> extractedUrls = new HashSet<>();
 
-        String rootUrlDomain = getUrlDomain(rootUrl);
+        String rootUrlDomain = CrawlHelper.getUrlDomain(rootUrl);
 
         Elements links = extractLinkElements(rootUrl);
         if(links == null){
@@ -39,7 +36,7 @@ public class UrlExtractor implements IUrlExtractor {
 
         for (Element link : links) {
             String linkUrl = getLinkUrl(link);
-            if(isValidUrl(rootUrlDomain, linkUrl)){
+            if(CrawlHelper.isValidUrl(rootUrlDomain, linkUrl)){
                 extractedUrls.add(linkUrl);
             }
         }
@@ -93,30 +90,4 @@ public class UrlExtractor implements IUrlExtractor {
         return doc.select(WebCrawlerConstants.HREF_A_TAG);
     }
 
-    /**
-     *
-     * @param rootUrl
-     * @return
-     */
-    private String getUrlDomain(String rootUrl) {
-        String rootUrlDomain = "";
-        try {
-            URL url = new URL(rootUrl);
-            rootUrlDomain = url.getHost();
-        } catch (MalformedURLException e) {
-            logger.error("Unable to validate url {}", rootUrl);
-        }
-        return rootUrlDomain;
-    }
-
-    public boolean isValidUrl(String rootUrlDomain, String extractedUrl) {
-
-        if(rootUrlDomain == null || extractedUrl == null){
-            return false;
-        }
-
-        String extractedUrlDomain = getUrlDomain(extractedUrl);
-
-        return rootUrlDomain.equals(extractedUrlDomain);
-    }
 }

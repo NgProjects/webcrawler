@@ -1,4 +1,4 @@
-package com.webcrawler.urlextractor.interfaces;
+package com.webcrawler.urlextractor;
 
 import java.util.Set;
 
