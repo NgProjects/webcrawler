@@ -1,6 +1,8 @@
-package com.webcrawler.unit.tests;
+package com.webcrawler.unit;
 
-import com.webcrawler.urlextractor.impl.UrlExtractor;
+import com.webcrawler.urlextractor.UrlExtractor;
+import org.jetbrains.annotations.NotNull;
+import org.jsoup.internal.NonnullByDefault;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +25,7 @@ public class UrlExtractorTest {
     }
 
     @Test
-    public void testExtractUrl() throws Exception {
+    public void testExtractUrl() {
 
         Mockito.doReturn(getMockElement()).when(urlExtractor).extractLinkElements(Mockito.anyString());
         Mockito.doAnswer(invocation -> {
@@ -85,7 +87,7 @@ public class UrlExtractorTest {
         }
 
         @Override
-        public String baseUri() {
+        public @NotNull String baseUri() {
             return url;
         }
     }

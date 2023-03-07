@@ -1,17 +1,13 @@
-package com.webcrawler.unit.tests;
+package com.webcrawler.mocks;
 
-import org.jsoup.nodes.Element;
-
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class MockUrlSource {
 
     /**
      *
-     * @return
+     * @return mocked data
      */
     public static Set<String> mockUrlSource() {
 
@@ -23,6 +19,19 @@ public class MockUrlSource {
         result.add("https://community.monzo.com");
         result.add("https://community.monzo.com/contact");
         result.add("https://community.monzo.com/faq");
+
+        return result;
+    }
+
+    public static Set<String> mockSameDomainUrl() {
+
+        Set<String> result = new HashSet<>();
+
+        result.add("https://monzo.com");
+        result.add("https://monzo.com/i/business");
+        result.add("https://monzo.com/features/travel");
+        result.add("https://monzo.com/contact");
+        result.add("https://monzo.com/faq");
 
         return result;
     }

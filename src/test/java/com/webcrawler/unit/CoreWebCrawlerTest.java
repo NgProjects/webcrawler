@@ -1,11 +1,10 @@
-package com.webcrawler.unit.tests;
+package com.webcrawler.unit;
 
-import com.webcrawler.crawler.impl.Crawler;
+import com.webcrawler.crawler.CoreWebCrawler;
 import com.webcrawler.exception.WebCrawlerRuntimeException;
-import com.webcrawler.helper.CrawlerHelper;
-import com.webcrawler.service.impl.CrawlerService;
-import com.webcrawler.unit.mocks.MockUrlSource;
-import org.junit.Assert;
+import com.webcrawler.helper.CrawlHelper;
+import com.webcrawler.service.CrawlerService;
+import com.webcrawler.mocks.MockUrlSource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,7 @@ import org.mockito.Mockito;
 
 import java.util.Set;
 
-public class CrawlerTest {
+public class CoreWebCrawlerTest {
 
     private CrawlerService crawlerService;
 
@@ -28,16 +27,14 @@ public class CrawlerTest {
 
     @Test
     public void testNullRootUrl(){
-        Assert.assertThrows("Test that an exception is thrown when crawler is initialized with a null url", WebCrawlerRuntimeException.class, () -> {
-            new Crawler(null, crawlerService);
-        });
+        Assertions.assertThrows(WebCrawlerRuntimeException.class, () -> new CoreWebCrawler(null, crawlerService), "Test that an exception is thrown when crawler is initialized with a null url");
     }
 
     @Test
     public void testThatCrawlerTriesToRetrieveFromTheCacheFirst(){
         Set<String> resultFromCache = MockUrlSource.mockUrlSource();
         Mockito.doReturn(resultFromCache).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
-        Crawler crawler = new Crawler("https://monzo.com", crawlerService);
+        CoreWebCrawler crawler = new CoreWebCrawler("https://monzo.com", crawlerService);
         Set<String> crawlerResult = crawler.crawlUrl();
 
         Assertions.assertEquals(crawlerResult, resultFromCache, "Test that crawler tries to retrieve data from cache first");
@@ -46,7 +43,7 @@ public class CrawlerTest {
 
     @Test
     public void testRemoveLastSlashInUrl(){
-        String result = CrawlerHelper.removeLastSlashIfAny("https://monzo.com/");
+        String result = CrawlHelper.removeLastSlashIfAny("https://monzo.com/");
         Assertions.assertEquals("https://monzo.com", result);
     }
 
@@ -56,7 +53,7 @@ public class CrawlerTest {
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
         Mockito.doReturn(resultFromDB).when(crawlerService).retrieveCrawledUrlFromDb(Mockito.anyString());
 
-        Crawler crawler = new Crawler("https://monzo.com", crawlerService);
+        CoreWebCrawler crawler = new CoreWebCrawler("https://monzo.com", crawlerService);
         Set<String> crawlerResult = crawler.crawlUrl();
 
         Assertions.assertEquals(crawlerResult, resultFromDB, "Test that crawler tries to retrieve data from cache first");
@@ -67,14 +64,14 @@ public class CrawlerTest {
     public void testThatCrawlerFetchesUrl(){
 
         Set<String> mockExtractedUrls = MockUrlSource.mockUrlSource();
-        int crawlLimitConfig = 3;
+        int maxRequest = 3;
 
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromDb(Mockito.anyString());
         Mockito.doReturn(null).when(crawlerService).getCachedChildUrls(Mockito.anyString());
         Mockito.doReturn(mockExtractedUrls).when(crawlerService).extractUrl(Mockito.anyString());
 
-        Mockito.doReturn(crawlLimitConfig).when(crawlerService).getCrawlLimit();
+        Mockito.doReturn(maxRequest).when(crawlerService).getMaxNoOfRequestsToDomain();
 
         Mockito.doNothing().when(crawlerService).cacheChildUrls(Mockito.anyString(), Mockito.anySet());
 
@@ -82,14 +79,15 @@ public class CrawlerTest {
 
         Mockito.doNothing().when(crawlerService).saveCrawledUrlInDB(Mockito.anyString(), Mockito.anySet());
 
-        Crawler crawler = new Crawler("https://monzo.com", crawlerService);
-        Set<String> crawlerResult = crawler.crawlUrl();
+        CoreWebCrawler crawler = new CoreWebCrawler("https://monzo.com", crawlerService);
+
+        crawler.crawlUrl();
 
         // Verify that methods were called in this order
         InOrder inOrder = Mockito.inOrder(crawlerService);
         inOrder.verify(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
         inOrder.verify(crawlerService).retrieveCrawledUrlFromDb(Mockito.anyString());
-        inOrder.verify(crawlerService).getCrawlLimit();
+        inOrder.verify(crawlerService).getMaxNoOfRequestsToDomain();
         inOrder.verify(crawlerService).getCachedChildUrls(Mockito.anyString());
         inOrder.verify(crawlerService).extractUrl(Mockito.anyString());
         inOrder.verify(crawlerService).cacheCrawledUrls(Mockito.anyString(), Mockito.anySet());
@@ -97,8 +95,7 @@ public class CrawlerTest {
 
         //Extract URL should be called for the mocked crawl limit value which is 3
         // visited url check should prevent the mocked urls to be crawled more than once
-        Mockito.verify(crawlerService, Mockito.atMost(crawlLimitConfig)).extractUrl(Mockito.anyString());
-
+        Mockito.verify(crawlerService, Mockito.atMost(maxRequest)).extractUrl(Mockito.anyString());
 
     }
 
