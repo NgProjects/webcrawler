@@ -6,7 +6,7 @@ import com.webcrawler.config.AnAppConfig;
 import com.webcrawler.config.IAppConfig;
 import com.webcrawler.constants.WebCrawlerConstants;
 import com.webcrawler.entities.CrawledUrl;
-import com.webcrawler.enums.ConfigKey;
+import com.webcrawler.configkeyenum.ConfigKey;
 import com.webcrawler.repository.CrawledUrlRepository;
 import com.webcrawler.urlextractor.AUrlExtractor;
 import com.webcrawler.urlextractor.IUrlExtractor;

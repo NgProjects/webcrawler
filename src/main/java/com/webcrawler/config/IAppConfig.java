@@ -1,8 +1,8 @@
 package com.webcrawler.config;
 
-import com.webcrawler.enums.ConfigKey;
+import com.webcrawler.configkeyenum.IConfigKey;
 
 public interface IAppConfig {
-    Integer getConfigInt(ConfigKey key);
-    String getConfig(ConfigKey key);
+    Integer getConfigInt(IConfigKey key);
+    String getConfig(IConfigKey key);
 }

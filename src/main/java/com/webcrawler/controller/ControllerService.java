@@ -3,8 +3,9 @@ package com.webcrawler.controller;
 import com.webcrawler.controller.response.CrawlerResponse;
 import com.webcrawler.crawler.CoreWebCrawler;
 import com.webcrawler.crawler.IWebCrawler;
-import com.webcrawler.service.ICrawlerService;
 import com.webcrawler.service.ACrawlerService;
+import com.webcrawler.service.ICrawlerService;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +26,22 @@ public class ControllerService {
      * @return - Crawler response containing the crawled url
      */
     public CrawlerResponse crawlUrl(String url) {
+
+        CrawlerResponse crawlerResponse = new CrawlerResponse();
+
+        boolean validUrl = UrlValidator.getInstance().isValid(url);
+        if(!validUrl){
+            crawlerResponse.setResponseCode("-1");
+            crawlerResponse.setResponseDescription("url provided is invalid");
+            return crawlerResponse;
+        }
+
         IWebCrawler webCrawler = new CoreWebCrawler(url, crawlerService);
         Set<String> extractedUrl = webCrawler.crawlUrl();
-        return new CrawlerResponse(extractedUrl);
+        crawlerResponse.setExtractedUrl(extractedUrl);
+        crawlerResponse.setResponseCode("00");
+
+        return crawlerResponse;
     }
+
 }

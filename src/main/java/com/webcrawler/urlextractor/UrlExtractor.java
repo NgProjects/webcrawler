@@ -36,7 +36,7 @@ public class UrlExtractor implements IUrlExtractor {
 
         for (Element link : links) {
             String linkUrl = getLinkUrl(link);
-            if(CrawlHelper.isValidUrl(rootUrlDomain, linkUrl)){
+            if(CrawlHelper.isTheSameDomain(rootUrlDomain, linkUrl)){
                 extractedUrls.add(linkUrl);
             }
         }
@@ -46,8 +46,8 @@ public class UrlExtractor implements IUrlExtractor {
 
     /**
      *
-     * @param rootUrl
-     * @return
+     * @param rootUrl url
+     * @return true if url can be crawled
      */
     private boolean urlCanBeCrawled(String rootUrl) {
         return rootUrl != null; //replace with checking for url robot.txt
@@ -55,8 +55,8 @@ public class UrlExtractor implements IUrlExtractor {
 
     /**
      *
-     * @param link
-     * @return
+     * @param link element link
+     * @return link url
      */
     public String getLinkUrl(Element link) {
         String linkHref = link.attr(WebCrawlerConstants.HREF_TAG);
@@ -71,8 +71,8 @@ public class UrlExtractor implements IUrlExtractor {
 
     /**
      *
-     * @param url
-     * @return
+     * @param url url
+     * @return elements
      */
     public Elements extractLinkElements(String url) {
         Document doc = null;

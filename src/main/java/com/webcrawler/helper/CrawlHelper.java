@@ -42,7 +42,7 @@ public class CrawlHelper {
     }
 
 
-    public static boolean isValidUrl(String rootUrlDomain, String extractedUrl) {
+    public static boolean isTheSameDomain(String rootUrlDomain, String extractedUrl) {
 
         if(rootUrlDomain == null || extractedUrl == null){
             return false;

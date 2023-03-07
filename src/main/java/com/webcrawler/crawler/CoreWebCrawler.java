@@ -16,7 +16,7 @@ public class CoreWebCrawler implements IWebCrawler {
 
     public CoreWebCrawler(String rootUrl, ICrawlerService crawlerService) {
         checkThatRootUrlIsNotNull(rootUrl);
-        this.rootUrl = rootUrl;
+        this.rootUrl = CrawlHelper.removeLastSlashIfAny(rootUrl);
         this.crawlerService = crawlerService;
         this.webCrawlerComponents = new WebCrawlerComponents();
     }
@@ -69,7 +69,7 @@ public class CoreWebCrawler implements IWebCrawler {
         webCrawlerComponents.getUrlFrontier().add(rootUrl);
         webCrawlerComponents.getVisitedUrls().add(rootUrl);
 
-        while (!webCrawlerComponents.getUrlFrontier().isEmpty() && noOfRequestsCompleted <= maxNoOfRequestToRootUrl){
+        while (!webCrawlerComponents.getUrlFrontier().isEmpty() && noOfRequestsCompleted < maxNoOfRequestToRootUrl){
 
             String currentUrl = CrawlHelper.removeLastSlashIfAny(webCrawlerComponents.getUrlFrontier().remove());
             Set<String> extractedUrl = crawlerService.getCachedChildUrls(currentUrl);

@@ -36,10 +36,10 @@ public class CrawledUrl implements Serializable {
 
     @CreatedDate
     @Column("create_date")
-    private Instant createDate;
+    private Instant createDate = Instant.now();
 
     @LastModifiedDate
     @Column("last_modified_date")
-    private Instant lastModifiedDate;
+    private Instant lastModifiedDate = Instant.now();
 
 }
