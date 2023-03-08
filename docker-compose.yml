@@ -4,10 +4,12 @@ services:
     webcrawler:
         image: 'webcrawler:latest'
         build:
-            dockerfile: Dockerfile
+            dockerfile: docker/webcrawler/Dockerfile
             context: .
         container_name: webcrawler
+        restart: always
         depends_on:
+            - cassandra
             - cache
         ports:
             - "8080:8080"
@@ -15,11 +17,25 @@ services:
             - webnet
     cache:
         image: 'redis'
+        hostname: cache
         ports:
             - "6379:6379"
         environment:
             - ALLOW_EMPTY_PASSWORD=yes
             - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        networks:
+            - webnet
+    cassandra:
+        build:
+            dockerfile: docker/cassandra/Dockerfile
+            context: .
+        expose:
+            - 9042
+        ports:
+            - "9042:9042"
+        environment:
+            CASSANDRA_DC: datacenter1
+            CASSANDRA_LISTEN_ADDRESS: cassandra
         networks:
             - webnet
 networks:
