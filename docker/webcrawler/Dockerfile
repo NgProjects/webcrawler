@@ -6,7 +6,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-RUN ./mvnw clean package install
+RUN ./mvnw clean package
 RUN mkdir -p target/dependency && (cd target/dependency; cp ../webcrawler.jar .)
 
 FROM eclipse-temurin:17-jdk-alpine
