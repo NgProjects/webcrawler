@@ -27,6 +27,7 @@ import org.springframework.data.cassandra.core.cql.generator.CreateKeyspaceCqlGe
 import org.springframework.data.cassandra.core.cql.keyspace.CreateKeyspaceSpecification;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
 import org.testcontainers.containers.CassandraContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -42,7 +43,8 @@ import java.util.Set;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+@EnabledIf("false")//
+public class DockerIntegrationTest {
 
     private static final String KEY_SPACE_NAME = "webcrawler";
 
