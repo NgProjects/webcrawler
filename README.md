@@ -36,7 +36,7 @@ After Installing docker,
 This will download all the necessary dependencies within docker and start up the project. the [application.properties](src%2Fmain%2Fresources%2Fapplication.properties) I have already pre-configured the project with the docker details so it's easy to start up with docker
 You can then access the swagger doc on  [localhost:8080/webcrawler/webcrawler-api-doc.html](localhost:8080/webcrawler/webcrawler-api-doc.html)
 
-**NOTE:** While starting up the project with docker, you will see errors like ```Cassandra is unavailable - will retry``` and errors similar to the one in the picture below, this is because cassandra DB is still starting up even though we specified that web crawler depends on cassandra to start up,
+**NOTE:** While starting up the project with docker, you will see errors like ```Cassandra is unavailable: DO NOT PANIC, CASSANDRA IS STILL STARTING UP. Webcrawler will start up as soon as cassandra is up - will retry``` and errors similar to the one in the picture below, this is because cassandra DB is still starting up even though we specified that web crawler depends on cassandra to start up,
 Please wait for some time until cassandra is done starting up. You do not have to do anything, the webcrawler container restarts automatically after cassandra is up.
 When it's complete, it shows this message
 ![img.png](spring_start_message.png)
