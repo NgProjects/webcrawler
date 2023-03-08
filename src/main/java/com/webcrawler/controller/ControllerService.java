@@ -32,7 +32,7 @@ public class ControllerService {
         boolean validUrl = UrlValidator.getInstance().isValid(url);
         if(!validUrl){
             crawlerResponse.setResponseCode("-1");
-            crawlerResponse.setResponseDescription("url provided is invalid");
+            crawlerResponse.setResponseDescription("url provided is invalid, please ensure it starts with http, https and does not have 2 or more forward (/) at the end of the url");
             return crawlerResponse;
         }
 
