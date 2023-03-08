@@ -1,7 +1,7 @@
 ## Web Crawler Application
 This application is used to crawl urls from a given website url.
+It crawls only urls related to the same domain of the root url. i.e https://www.monzo.com would only visit urls in that domain.
 It has a configuration for the maximum request it can make to a website during the crawl process.
-It only crawls urls related to the same domain of the root url. i.e https://www.monzo.com would only visit urls in that domain.
 
 ### High level design
 ![web-crawler.png](web-crawler.png)
@@ -11,25 +11,24 @@ It only crawls urls related to the same domain of the root url. i.e https://www.
 * [Maven](https://maven.apache.org/)
 * [Redis cache](https://redis.io/)
 * [Cassandra DB](https://cassandra.apache.org/)
+* [JDK 17](https://bell-sw.com/pages/downloads/)
 
 ## Getting started
 
-### Prerequisites
-
-To set up the project We'll need the following;
-
-**IDE** - Best to use a Java IDE like IntelliJ [download intelliJ here](https://www.jetbrains.com/idea/download/) or Eclipse [download Eclipse here](https://www.eclipse.org/downloads/)
-
-**Maven** - This project is a maven project and requires maven, some IDEs come with maven, but if you need to install it, you can get it [here](https://maven.apache.org/) and Install using [Maven Installation guide](https://maven.apache.org/install.html)
-
-**Docker** - This project runs on docker, makes setup faster and you don't have to download individual components on your system [Download docker for your desktop here](https://www.docker.com/products/docker-desktop/).
-
 ### Starting up project
 
+First, Unzip the project.
+
 #### Starting up the project using Docker
+
+### Prerequisites
+
+**Docker** - This project runs on docker, makes setup faster and you don't have to download individual components on your system [Download docker for your desktop here](https://www.docker.com/products/docker-desktop/).<br/>
+If using homebrew on Mac, You can also install docker using ```brew install docker```
+
 After Installing docker, 
 - start up the docker desktop
-- with your terminal tool, navigater to the project folder (in this case ```webcrawler```) and run the ```docker compose up``` command
+- with your terminal tool, navigate to the project folder (in this case ```webcrawler```) and run the ```docker compose up``` command
 
 This will download all the necessary dependencies within docker and start up the project. the [application.properties](src%2Fmain%2Fresources%2Fapplication.properties) I have already pre-configured the project with the docker details so it's easy to start up with docker
 You can then access the project on  [http://localhost:8080/](http://localhost:8080/)
@@ -39,9 +38,22 @@ Please wait for some time until cassandra is done starting up. You do not have t
 ![webcrawler_cassandra_error.png](webcrawler_cassandra_error.png)
 
 #### Starting up the project manually
+
+### Prerequisites
+
+To set up the project We'll need the following; If you are using homebrew on macbook you can also install these components using homebrew
+
+**IDE** - Best to use a Java IDE like IntelliJ [download intelliJ here](https://www.jetbrains.com/idea/download/) or Eclipse [download Eclipse here](https://www.eclipse.org/downloads/) or with homebrew ```brew install --cask intellij-idea```
+
+**JDK 17** - This project runs on JDK 17 which can be downloaded from here [JDK 17](https://bell-sw.com/pages/downloads/) or with homebrew ```brew install openjdk@17```
+
+**Maven** - This project is a maven project and requires maven, some IDEs come with maven, but if you need to install it, you can get it [here](https://maven.apache.org/) and Install using [Maven Installation guide](https://maven.apache.org/install.html) 
+
+
+
 This project depends on Redis(Cache) [Redis download and installation instructions can be found here](https://redis.io/download/#redis-downloads) and Cassandra(DB) [Cassandra DB download and installation instructions can be found here](https://cassandra.apache.org/_/download.html)
 After installing these components, start them up and configure their respective details in the [application.properties](src%2Fmain%2Fresources%2Fapplication.properties) file.
-If you are using hombrew on macbook you can also install these components using homebrew:
+
 
 Cassandra - ```brew install cassandra```
 
