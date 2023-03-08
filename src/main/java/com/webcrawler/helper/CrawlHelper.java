@@ -36,7 +36,7 @@ public class CrawlHelper {
             URL url = new URL(rootUrl);
             rootUrlDomain = url.getHost();
         } catch (MalformedURLException e) {
-            logger.error("Unable to validate url {}", rootUrl);
+//            logger.error("Unable to validate url {}", rootUrl); //commented out to avoid excess logs, some URLs can actually be invalid
         }
         return rootUrlDomain;
     }

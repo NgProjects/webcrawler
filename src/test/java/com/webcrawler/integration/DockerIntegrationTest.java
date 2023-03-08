@@ -41,9 +41,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@EnabledIf("false")//
+@EnabledIf("false")
 public class DockerIntegrationTest {
 
     private static final String KEY_SPACE_NAME = "webcrawler";
@@ -90,7 +90,9 @@ public class DockerIntegrationTest {
     private static void initPropertyFiles(DynamicPropertyRegistry registry) {
         //set up cassandra
         registry.add("spring.cassandra.keyspace-name", () -> KEY_SPACE_NAME);
-        registry.add("spring.data.cassandra.schema-action", () -> "CREATE_IF_NOT_EXISTS");
+        registry.add("spring.cassandra.schema-action", () -> "CREATE_IF_NOT_EXISTS");
+        registry.add("spring.cassandra.connection.init-query-timeout", () -> "50s");
+        registry.add("spring.cassandra.request.timeout", () -> "50s");
         registry.add("spring.cassandra.local-datacenter", cassandra::getLocalDatacenter);
         registry.add("spring.cassandra.contact-points", cassandra::getHost);
         registry.add("spring.cassandra.port", () -> String.valueOf(cassandra.getMappedPort(9042)));
@@ -99,17 +101,6 @@ public class DockerIntegrationTest {
         registry.add("spring.cache.type", () -> "redis");
         registry.add("spring.data.redis.host", redis::getHost);
         registry.add("spring.data.redis.port", redis::getFirstMappedPort);
-    }
-
-    private static void initTables(CqlSession cqlSession) {
-        String createTableScript;
-        try {
-            createTableScript = readFile("create_crawledurl_table.csql");//sql file can be found in the resource folder
-            cqlSession.execute(createTableScript);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private static String readFile(final String fileName) throws IOException {
@@ -124,7 +115,6 @@ public class DockerIntegrationTest {
         try (CqlSession session =  cqlSessionBuilder.build()) {
             session.execute(CreateKeyspaceCqlGenerator.toCql(
                     CreateKeyspaceSpecification.createKeyspace(KEY_SPACE_NAME).ifNotExists()));
-            initTables(session);//init tables
         }
     }
 
