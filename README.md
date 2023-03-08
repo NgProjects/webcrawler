@@ -1,6 +1,6 @@
 ## Web Crawler Application
 This application is used to crawl urls from a given website url.
-It crawls only urls related to the same domain of the root url. i.e https://www.monzo.com would only visit urls in that domain.
+It crawls only urls related to the same domain of the root url. e.g https://www.monzo.com would only visit urls in that domain.
 It has a configuration for the maximum request it can make to a website during the crawl process.
 
 ### High level design
@@ -34,7 +34,7 @@ After Installing docker,
 - Make sure you are running the docker compose command within the 
 
 This will download all the necessary dependencies within docker and start up the project. the [application.properties](src%2Fmain%2Fresources%2Fapplication.properties) I have already pre-configured the project with the docker details so it's easy to start up with docker
-You can then access the swagger doc on  [http://localhost:8080/webcrawler-api-doc.html ](http://localhost:8080/webcrawler-api-doc.html )
+You can then access the swagger doc on  [localhost:8080/webcrawler/webcrawler-api-doc.html](localhost:8080/webcrawler/webcrawler-api-doc.html)
 
 **NOTE:** While starting up the project with docker, you will see errors like ```Cassandra is unavailable - will retry``` and errors similar to the one in the picture below, this is because cassandra DB is still starting up even though we specified that web crawler depends on cassandra to start up,
 Please wait for some time until cassandra is done starting up. You do not have to do anything, the webcrawler container restarts automatically after cassandra is up.
@@ -62,14 +62,14 @@ To set up the project We'll need the following; If you are using homebrew on mac
 After installing cassandra and redis,  start them up and configure their properties with their respective keys in [application.properties](src%2Fmain%2Fresources%2Fapplication.properties) file
 
 After adding the configurations, open the project with IntelliJ, run `mvn clean package` after that, run the [WebcrawlerApplication.java](src%2Fmain%2Fjava%2Fcom%2Fwebcrawler%2FWebcrawlerApplication.java) class, it will start up as it is a spring boot project.
-You can then access the project on  [http://localhost:8080/webcrawler-api-doc.html](http://localhost:8080/webcrawler-api-doc.html)
+You can then access the project on  [localhost:8080/webcrawler/webcrawler-api-doc.html](localhost:8080/webcrawler/webcrawler-api-doc.html)
 
 ### API Documentation and Usage
 
 After Starting up the project with the steps above, the project is ready to be tested.
 
 This project uses swagger UI for API documentation. 
-You can access the project's swagger UI on [http://localhost:8080/webcrawler-api-doc.html](http://localhost:8080/webcrawler-api-doc.html) 
+You can access the project's swagger UI on [localhost:8080/webcrawler/webcrawler-api-doc.html](localhost:8080/webcrawler/webcrawler-api-doc.html) 
 with the swagger UI you will be able to see the available endpoints and how to use them.
 you will also be able to send request with the swagger UI by clicking on the ```Try it out``` button.
 or you can make a request with postman, you can [download postman here](https://www.postman.com/) if you need to.

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(path = "webcrawler")
+@RequestMapping
 @Validated
 public class CrawlRestController {
 
