@@ -40,6 +40,7 @@ public class ControllerService {
         Set<String> extractedUrl = webCrawler.crawlUrl();
         crawlerResponse.setExtractedUrl(extractedUrl);
         crawlerResponse.setResponseCode("00");
+        crawlerResponse.setResponseDescription("success");
 
         return crawlerResponse;
     }
