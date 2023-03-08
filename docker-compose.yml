@@ -18,17 +18,16 @@ services:
     cache:
         image: 'redis'
         hostname: cache
+        container_name: webcrawler_cache
         ports:
             - "6379:6379"
-        environment:
-            - ALLOW_EMPTY_PASSWORD=yes
-            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
         networks:
             - webnet
     cassandra:
         build:
             dockerfile: docker/cassandra/Dockerfile
             context: .
+        container_name: webcrawler_cassandra
         expose:
             - 9042
         ports:

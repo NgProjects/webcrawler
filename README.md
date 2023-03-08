@@ -1,6 +1,6 @@
 ## Web Crawler Application
-This application is used to crawl urls from a given website url.
-It crawls only urls related to the same domain of the root url. e.g https://www.monzo.com would only visit urls in that domain.
+This application is used to crawl urls from a given link.
+It crawls only urls related to the same domain of the root link. e.g https://www.monzo.com would only visit urls in that domain.
 It has a configuration for the maximum request it can make to a website during the crawl process.
 
 ### High level design
