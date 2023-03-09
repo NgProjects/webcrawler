@@ -101,6 +101,10 @@ Also disable the docker integration test while running the project with docker b
 ### Building after making changes to the code
 After making change to the code and you need to re-run with docker, please run ```docker compose build``` first before you run ```docker compose up``` this is to ensure that the project is rebuilt after the change.
 
+###  running webcrawler async - making it better
+- Webcrawler can process a request async, it can also accept multiple urls, and handle them asynchronously. [CoreWebCrawler.java](src%2Fmain%2Fjava%2Fcom%2Fwebcrawler%2Fcrawler%2FCoreWebCrawler.java) was designed to also run very well in parallel as each CoreWebCrawler has it's own internal WebCrawlerComponents.
+
+
 
 
 
