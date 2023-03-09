@@ -38,10 +38,12 @@ You can then access the swagger doc on  [localhost:8080/webcrawler/webcrawler-ap
 
 **NOTE:** While starting up the project with docker, you will see errors like ```Cassandra is unavailable: DO NOT PANIC, CASSANDRA IS STILL STARTING UP. Webcrawler will start up as soon as cassandra is up - will retry``` and errors similar to the one in the picture below, this is because cassandra DB is still starting up even though we specified that web crawler depends on cassandra to start up,
 Please wait for some time until cassandra is done starting up. You do not have to do anything, the webcrawler container restarts automatically after cassandra is up.
-When it's complete, it shows this message
+![webcrawler_cassandra_error.png](webcrawler_cassandra_error.png)
+
+When Spring boot app starts up successfully, it shows this message
 ![img.png](spring_start_message.png)
 
-![webcrawler_cassandra_error.png](webcrawler_cassandra_error.png)
+
 
 #### If you wish to start up the project manually
 
