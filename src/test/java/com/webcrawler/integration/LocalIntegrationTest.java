@@ -65,7 +65,7 @@ public class LocalIntegrationTest {
     @Test
     public void testThatCrawlInteractsWithComponents(){
 
-        String url = "https://monzo.com";
+        String url = "https://testdomain.com";
         CrawlerResponse response = controllerService.crawlUrl(url);
         CrawledUrl crawledUrl = crawledUrlRepository.findCrawledUrlByUrl(url);
         Set<String> cachedUrls = cache.getItem(url);

@@ -34,22 +34,22 @@ public class UrlExtractorTest {
         }).when(urlExtractor).getLinkUrl(Mockito.any(Element.class));
 
         //Test 1 using root domains
-        Set<String> extractedUrls = urlExtractor.extractUrl("https://monzo.com/");
+        Set<String> extractedUrls = urlExtractor.extractUrl("https://testdomain.com/");
 
         Set<String> expectedResult = new HashSet<>();
-        expectedResult.add("https://monzo.com/i/business");
-        expectedResult.add("https://monzo.com/features/travel");
-        expectedResult.add("https://monzo.com");
+        expectedResult.add("https://testdomain.com/i/business");
+        expectedResult.add("https://testdomain.com/features/travel");
+        expectedResult.add("https://testdomain.com");
 
         Assertions.assertEquals(expectedResult, extractedUrls, "Test that only URLs in the same domain with the root url are returned");
 
         //Test 2 using sub domains
-        Set<String> extractedUrlsDomain = urlExtractor.extractUrl("https://community.monzo.com/faq/");
+        Set<String> extractedUrlsDomain = urlExtractor.extractUrl("https://community.testdomain.com/faq/");
 
         Set<String> expectedResultDomain = new HashSet<>();
-        expectedResultDomain.add("https://community.monzo.com");
-        expectedResultDomain.add("https://community.monzo.com/contact");
-        expectedResultDomain.add("https://community.monzo.com/faq");
+        expectedResultDomain.add("https://community.testdomain.com");
+        expectedResultDomain.add("https://community.testdomain.com/contact");
+        expectedResultDomain.add("https://community.testdomain.com/faq");
 
         Assertions.assertEquals(expectedResultDomain, extractedUrlsDomain, "Test that only URLs in the same domain with the root url are returned");
     }
@@ -68,12 +68,12 @@ public class UrlExtractorTest {
 
         ArrayList<Element> result = new ArrayList<>();
 
-        result.add(new MockElement("https://monzo.com"));
-        result.add(new MockElement("https://monzo.com/i/business"));
-        result.add(new MockElement("https://monzo.com/features/travel"));
-        result.add(new MockElement("https://community.monzo.com"));
-        result.add(new MockElement("https://community.monzo.com/contact"));
-        result.add(new MockElement("https://community.monzo.com/faq"));
+        result.add(new MockElement("https://testdomain.com"));
+        result.add(new MockElement("https://testdomain.com/i/business"));
+        result.add(new MockElement("https://testdomain.com/features/travel"));
+        result.add(new MockElement("https://community.testdomain.com"));
+        result.add(new MockElement("https://community.testdomain.com/contact"));
+        result.add(new MockElement("https://community.testdomain.com/faq"));
 
         return result;
     }

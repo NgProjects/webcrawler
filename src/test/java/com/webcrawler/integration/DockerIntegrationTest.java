@@ -121,7 +121,7 @@ public class DockerIntegrationTest {
     @Test
     public void testThatCrawlInteractsWithComponents(){
 
-        String url = "https://monzo.com";
+        String url = "https://testdomain.com";
         CrawlerResponse response = controllerService.crawlUrl(url);
         CrawledUrl crawledUrl = crawledUrlRepository.findCrawledUrlByUrl(url);
         Set<String> cachedUrls = cache.getItem(url);
@@ -134,7 +134,7 @@ public class DockerIntegrationTest {
 
     @Test
     public void testThatAnInvalidMessageIsReturnedWhenInvalidUrlIsPassedInRequest(){
-        CrawlerResponse response = this.restTemplate.getForObject("http://localhost:" + port + "/webcrawler/single?url=https://monzo.com////", CrawlerResponse.class);
+        CrawlerResponse response = this.restTemplate.getForObject("http://localhost:" + port + "/webcrawler/single?url=https://testdomain.com////", CrawlerResponse.class);
         Assertions.assertNull(response.getExtractedUrl());
         Assertions.assertEquals("-1", response.getResponseCode());
     }

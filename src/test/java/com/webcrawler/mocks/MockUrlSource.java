@@ -13,12 +13,12 @@ public class MockUrlSource {
 
         Set<String> result = new HashSet<>();
 
-        result.add("https://monzo.com");
-        result.add("https://monzo.com/i/business");
-        result.add("https://monzo.com/features/travel");
-        result.add("https://community.monzo.com");
-        result.add("https://community.monzo.com/contact");
-        result.add("https://community.monzo.com/faq");
+        result.add("https://testdomain.com");
+        result.add("https://testdomain.com/i/business");
+        result.add("https://testdomain.com/features/travel");
+        result.add("https://community.testdomain.com");
+        result.add("https://community.testdomain.com/contact");
+        result.add("https://community.testdomain.com/faq");
 
         return result;
     }
@@ -27,11 +27,11 @@ public class MockUrlSource {
 
         Set<String> result = new HashSet<>();
 
-        result.add("https://monzo.com");
-        result.add("https://monzo.com/i/business");
-        result.add("https://monzo.com/features/travel");
-        result.add("https://monzo.com/contact");
-        result.add("https://monzo.com/faq");
+        result.add("https://testdomain.com");
+        result.add("https://testdomain.com/i/business");
+        result.add("https://testdomain.com/features/travel");
+        result.add("https://testdomain.com/contact");
+        result.add("https://testdomain.com/faq");
 
         return result;
     }

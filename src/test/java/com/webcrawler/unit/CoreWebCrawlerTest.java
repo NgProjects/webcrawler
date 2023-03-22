@@ -34,7 +34,7 @@ public class CoreWebCrawlerTest {
     public void testThatCrawlerTriesToRetrieveFromTheCacheFirst(){
         Set<String> resultFromCache = MockUrlSource.mockUrlSource();
         Mockito.doReturn(resultFromCache).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
-        CoreWebCrawler crawler = new CoreWebCrawler("https://monzo.com", crawlerService);
+        CoreWebCrawler crawler = new CoreWebCrawler("https://testdomain.com", crawlerService);
         Set<String> crawlerResult = crawler.crawlUrl();
 
         Assertions.assertEquals(crawlerResult, resultFromCache, "Test that crawler tries to retrieve data from cache first");
@@ -43,8 +43,8 @@ public class CoreWebCrawlerTest {
 
     @Test
     public void testRemoveLastSlashInUrl(){
-        String result = CrawlHelper.removeLastSlashIfAny("https://monzo.com/");
-        Assertions.assertEquals("https://monzo.com", result);
+        String result = CrawlHelper.removeLastSlashIfAny("https://testdomain.com/");
+        Assertions.assertEquals("https://testdomain.com", result);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class CoreWebCrawlerTest {
         Mockito.doReturn(null).when(crawlerService).retrieveCrawledUrlFromCache(Mockito.anyString());
         Mockito.doReturn(resultFromDB).when(crawlerService).retrieveCrawledUrlFromDb(Mockito.anyString());
 
-        CoreWebCrawler crawler = new CoreWebCrawler("https://monzo.com", crawlerService);
+        CoreWebCrawler crawler = new CoreWebCrawler("https://testdomain.com", crawlerService);
         Set<String> crawlerResult = crawler.crawlUrl();
 
         Assertions.assertEquals(crawlerResult, resultFromDB, "Test that crawler tries to retrieve data from cache first");
@@ -79,7 +79,7 @@ public class CoreWebCrawlerTest {
 
         Mockito.doNothing().when(crawlerService).saveCrawledUrlInDB(Mockito.anyString(), Mockito.anySet());
 
-        CoreWebCrawler crawler = new CoreWebCrawler("https://monzo.com", crawlerService);
+        CoreWebCrawler crawler = new CoreWebCrawler("https://testdomain.com", crawlerService);
 
         crawler.crawlUrl();
 
